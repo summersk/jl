@@ -22,6 +22,9 @@ func NewParser(r io.Reader, h EntryPrinter) *Parser {
 
 func (p *Parser) Consume() error {
 	s := p.scan
+	const maxBuffer int = 10 * 1024 * 1024 // 10MB line buffer
+	buf := make([]byte, maxBuffer)
+	s.Buffer(buf, maxBuffer)
 	for s.Scan() {
 		raw := s.Bytes()
 		var partials map[string]json.RawMessage
